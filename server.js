@@ -15,6 +15,8 @@ app.use(bodyParser.json())
 
 //set static folder
 app.use(express.static(path.join(__dirname, "public")));
+
+//get data from the form
 let username;
 let room;
 app.post("/",(req,res)=>{
@@ -24,7 +26,10 @@ app.post("/",(req,res)=>{
     if(req.body.password=="1234567"){
        res.sendFile(chatPage);
     }
- })
+   else{
+    res.redirect("/");
+   }
+ });
 io.on('connection', socket => {
     
         const user = userJoin(socket.id, username, room);
