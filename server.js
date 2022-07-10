@@ -7,11 +7,26 @@ const formatMessage = require('./utils/messages');
 const { userJoin, getCurrentUser, userLeave, getRoomUsers } = require('./utils/users');
 const server = http.createServer(app);
 const io = socketio(server);
+const bodyParser=require('body-parser');
+app.use(bodyParser.urlencoded({ extended: false }))
+const chatPage=path.join(__dirname,"./public/chat.html")
+// parse application/json
+app.use(bodyParser.json())
+
 //set static folder
 app.use(express.static(path.join(__dirname, "public")));
-
+let username;
+let room;
+app.post("/",(req,res)=>{
+    console.log(req.body);
+    username=req.body.username;
+    room=req.body.room;
+    if(req.body.password=="1234567"){
+       res.sendFile(chatPage);
+    }
+ })
 io.on('connection', socket => {
-    socket.on("joinRoom", ({ username, room }) => {
+    
         const user = userJoin(socket.id, username, room);
         //join the room
         socket.join(user.room)
@@ -24,7 +39,6 @@ io.on('connection', socket => {
             room: user.room,
             users: getRoomUsers(user.room)
         });
-    });
 
     //receiving message from chat
     socket.on("chatMessage", (msg) => {
@@ -45,10 +59,8 @@ io.on('connection', socket => {
 });
 });
 
-//app.post("/data",(req,res)=>{
- //   console.log(req.body);
-//})
+
 
 server.listen( process.env.PORT || 3000, () => {
-    console.log("app is listening on 5000 ");
+    console.log("app is listening on 3000 ");
 })

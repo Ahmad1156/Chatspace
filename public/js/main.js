@@ -7,7 +7,7 @@ const {username,room}=Qs.parse(location.search,{
     ignoreQueryPrefix:true
 })
 
-socket.emit("joinRoom",{username,room});
+//socket.emit("joinRoom",{username,room});
 //getting message from server
 socket.on("message",(message)=>{
 
@@ -27,7 +27,6 @@ chatForm.addEventListener('submit',(e)=>{
     //get message
     const msg=e.target.elements.msg.value
     //Emit message to server
-
     socket.emit("chatMessage",msg);
     //clear All elements
     e.target.elements.msg.value='';
